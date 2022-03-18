@@ -1,0 +1,82 @@
+.App {
+  text-align: center;
+}
+
+.container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  position: fixed;
+  align-items: center;
+  justify-content: center;
+  overflow-x: auto;
+}
+
+.title {
+  text-align: center;
+  font-family: monospace;
+}
+
+.clock {
+  font-family: monospace;
+  margin: 4em;
+  text-align: center;
+}
+
+.clock-text {
+  font-size: 3em;
+}
+
+.face-clock {
+  background: lightblue;
+  border-radius: 50%;
+  height: 200px;
+  width: 200px;
+  padding: 10px;
+  display: flex;
+  border: solid white;
+  justify-content: center;
+  align-items: center;
+}
+
+.active {
+  background: white;
+  border: solid lightblue;
+}
+
+.button {
+  border: none;
+  color: white;
+  padding: 5px;
+  margin: 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.mode-btn {
+  background-color: lightskyblue;
+}
+
+.increase-btn {
+  background-color: orange;
+}
+
+.light-btn {
+  background-color: lightskyblue;
+}
+
+.reset-btn {
+  background-color: red;
+}
+
+.footer {
+  text-align: left;
+  font-family: monospace;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+}
