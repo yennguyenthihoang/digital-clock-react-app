@@ -25,10 +25,10 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.state = {
+    this.setState({
       clocks: _clocks,
       timezones: momentTZ.tz.names(),
-    };
+    });
   }
 
   addNewClock(e){

@@ -17,14 +17,14 @@ class Clock extends Component {
         if (this.props.config.meridiem === undefined) { this.props.config.meridiem = false }
     
         /* Set Initlal State */
-        const {hours, minutes, seconds, meridiem, timezone} = this.getMoment(this.props.config.timezone, this.props.config.locale);
+        const {hours, minutes, seconds, meridiem} = this.getMoment(this.props.config.timezone, this.props.config.locale);
         this.state = {
           currentDate: this.getMoment(this.props.config.timezone, this.props.config.locale),
           hours: hours,
           minutes: minutes,
           seconds: seconds,
           mode: 0,
-          meridiem: false,
+          meridiem: meridiem,
           light: false,
         };
     }
@@ -96,7 +96,6 @@ class Clock extends Component {
      * Mode is 2: increase minute
      */
     pressIncreaseBtn() {
-
         switch(this.state.mode){
             case 1:
                 let newHours = this.state.hours + 1;
