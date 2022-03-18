@@ -31,7 +31,8 @@ class App extends Component {
     };
   }
 
-  addNewClock(){
+  addNewClock(e){
+    e.preventDefault();
     let newClock =  { id: 'clock'+ this.state.newClockTimeZone?.split("/")[0] + '_' + this.state.newClockTimeZone?.split("/")[1], 
     city: this.state.newClockTimeZone?.split("/")[1], 
     timezone: this.state?.newClockTimeZone, 

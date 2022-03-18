@@ -3,7 +3,7 @@
 }
 
 .container {
-  height: 100%;
+  height: 90%;
   width: 100%;
   display: flex;
   flex-wrap: wrap;
@@ -50,26 +50,53 @@
   color: white;
   padding: 5px;
   margin: 5px;
+  border: solid white;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
+  cursor: pointer;
+  transition-duration: 0.4s;
 }
 
 .mode-btn {
   background-color: lightskyblue;
 }
 
+.mode-btn:hover {
+  background-color: white;
+  color: lightskyblue;
+  border: solid lightskyblue;
+}
+
 .increase-btn {
   background-color: orange;
+}
+
+.increase-btn:hover {
+  background-color: white;
+  color: orange;
+  border: solid orange;
 }
 
 .light-btn {
   background-color: lightskyblue;
 }
 
+.light-btn:hover {
+  background-color: white;
+  color: lightskyblue;
+  border: solid lightskyblue;
+}
+
 .reset-btn {
   background-color: red;
+}
+
+.reset-btn:hover {
+  background-color: white;
+  color: red;
+  border: solid red;
 }
 
 .footer {
