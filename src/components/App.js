@@ -61,21 +61,22 @@ class App extends Component {
           {this.state.clocks.map(clock =>
             <Clock key={clock.id} config={clock} />
           )}
-
-          <div className="clock">
-            <form onSubmit={this.addNewClock}>
-              <label>
-                Time zone:
-                <div className="select-container">
-                  <select value={this.state.newClockTimeZone} onChange={this.onselect}>
-                    {this.state.timezones.map((tz, i) => (
-                      <option key={i} value={tz}>{tz}</option>
-                    ))}
-                  </select>
-                </div>
-              </label>
-              <input className="button light-btn" type="submit" value="Add new clock" />
-            </form>
+          <div className="clock add">
+            <div className="face-clock">
+              <form onSubmit={this.addNewClock}>
+                <label>
+                  Time zone:
+                  <div className="select-container">
+                    <select className="select" value={this.state.newClockTimeZone} onChange={this.onselect}>
+                      {this.state.timezones.map((tz, i) => (
+                        <option key={i} value={tz}>{tz}</option>
+                      ))}
+                    </select>
+                  </div>
+                </label>
+                <input className="button light-btn" type="submit" value="Add new clock" />
+              </form>
+            </div>
           </div>
         </div>
         <div className="footer">
