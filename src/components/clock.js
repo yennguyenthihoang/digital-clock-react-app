@@ -13,16 +13,18 @@ class Clock extends Component {
         if (this.props.config.showCity === undefined) { this.props.config.showCity = true }
         if (this.props.config.locale === undefined) { this.props.config.locale = 'en' }
         if (this.props.config.showTimezone === undefined) { this.props.config.showTimezone = true }
+        /*Use 12 hour clock to show AM/PM, default is false */
         if (this.props.config.meridiem === undefined) { this.props.config.meridiem = false }
     
         /* Set Initlal State */
-        const {hours, minutes, seconds} = this.getMoment(this.props.config.timezone, this.props.config.locale);
+        const {hours, minutes, seconds, meridiem, timezone} = this.getMoment(this.props.config.timezone, this.props.config.locale);
         this.state = {
           currentDate: this.getMoment(this.props.config.timezone, this.props.config.locale),
           hours: hours,
           minutes: minutes,
           seconds: seconds,
           mode: 0,
+          meridiem: false,
           light: false,
         };
     }
@@ -63,6 +65,7 @@ class Clock extends Component {
           hours: (hours < 10 ? '0' : '') + hours,
           minutes: (minutes < 10 ? '0' : '') + minutes,
           seconds: (seconds < 10 ? '0' : '') + seconds,
+          meridiem: meridiem,
           timezone: tz
         };
     }
@@ -123,6 +126,12 @@ class Clock extends Component {
         });
     }
 
+    resetMeridiem() {
+        this.setState({
+            meridiem: !this.state.meridiem
+        });
+    }
+
     render() {
         const { config } = this.props;
         const {
@@ -130,6 +139,7 @@ class Clock extends Component {
         minutes,
         seconds,
         timezone,
+        meridiem
         } = this.state.currentDate;
 
         return (
@@ -144,9 +154,12 @@ class Clock extends Component {
                 
                 <div className={`face-clock ${this.state.light ? "active" : ""}`}>
                     <span className="clock-text">{hours}:{minutes}<sub className="seconds">{seconds}</sub></span>
+                    {config.meridiem ?
+                        <sub className="meridiem">{meridiem}</sub> : null}
                 </div>
                 <div className="button">
                     <button className="button reset-btn" onClick={this.reset.bind(this)} >Reset</button>
+                    <button className="button reset-btn" onClick={this.resetMeridiem.bind(this)} >Show meridiem </button>
                 </div>
                 
             </div>
@@ -165,6 +178,7 @@ Clock.propTypes = {
         locale: PropTypes.string,
         showCity: PropTypes.bool,
         showTimezone: PropTypes.bool,
+        meridiem: PropTypes.bool,
     })
 };
 

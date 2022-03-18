@@ -62,6 +62,7 @@ class App extends Component {
             <Clock key={clock.id} config={clock} />
           )}
           <div className="clock add">
+            <h1 className="city">Add a new clock</h1>
             <div className="face-clock">
               <form onSubmit={this.addNewClock}>
                 <label>
@@ -74,13 +75,10 @@ class App extends Component {
                     </select>
                   </div>
                 </label>
-                <input className="button light-btn" type="submit" value="Add new clock" />
+                <input className="button light-btn" type="submit" value="Add clock" />
               </form>
             </div>
           </div>
-        </div>
-        <div className="footer">
-          <span><i><b>Developer: </b>NGUYEN Thi Hoang Yen</i></span>
         </div>
       </>
     );
