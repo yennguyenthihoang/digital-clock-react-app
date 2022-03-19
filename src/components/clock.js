@@ -229,7 +229,7 @@ Clock.propTypes = {
         light: PropTypes.bool,
         city: PropTypes.string,
         locale: PropTypes.string,
-        meridiem: PropTypes.bool,
+        meridiem: PropTypes.string,
     })
 };
 

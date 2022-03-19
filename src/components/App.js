@@ -52,7 +52,7 @@ class App extends Component {
     return (
       <>
         <div className="title">
-          <h1>Digital Watch</h1>
+          <h1>Digital Watch - ReactJS</h1>
           <span><i><b>Note: </b>Watch editable mode: 0 do nothing, 1 edit hours, 2 edit minutes</i></span>
         </div>
         <div className="container">
