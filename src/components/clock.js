@@ -4,68 +4,99 @@ import moment from 'moment-timezone';
 import './clock-locales';
 import '../styles/App.css';
 
+/**
+ * Clock Class
+ * id
+ * city
+ * timezone
+ * hours
+ * minutes
+ * seconds
+ * light: light mode is on or off at night
+ * editableMode: 0 is not editable, 1 is hour editable, 2 is minute editable
+ * displayMode: time is displayed in 24h or AM/PM format
+ */
+
 class Clock extends Component { 
     constructor(props) {
         super(props);
-    
         /* Set Default Props Values */
         if (this.props.config.id === undefined) { this.props.config.id = `pixelfactory-${this.props.config.city}` }
-        if (this.props.config.showCity === undefined) { this.props.config.showCity = true }
         if (this.props.config.locale === undefined) { this.props.config.locale = 'en' }
-        if (this.props.config.showTimezone === undefined) { this.props.config.showTimezone = true }
         /*Use 12 hour clock to show AM/PM, default is false */
         if (this.props.config.meridiem === undefined) { this.props.config.meridiem = false }
     
         /* Set Initlal State */
-        const {hours, minutes, seconds, meridiem} = this.getMoment(this.props.config.timezone, this.props.config.locale);
+        const {hours, minutes, seconds} = this.getCurrentTime(this.props.config.timezone, this.props.config.locale);
+
         this.state = {
-          currentDate: this.getMoment(this.props.config.timezone, this.props.config.locale),
           hours: hours,
           minutes: minutes,
           seconds: seconds,
-          mode: 0,
-          meridiem: meridiem,
+          editableMode: 0,
           light: false,
+          displayMode: false,
+          meridiem: '',
         };
     }
 
+    updateClock() {
+        let newHours = this.state.hours;
+        let newMinutes =this.state.minutes;
+        let newSeconds = this.state.seconds + 1;
+        let newMerdiem = this.state.meridiem;
+
+        if(newSeconds === 60) {
+            newMinutes++;
+            newSeconds = 0;
+            if(newMinutes === 60){
+                newHours++;
+                newMinutes = 0;
+                if(newHours === 24) {
+                    newHours = 0;
+                }
+                
+                if(this.state.displayMode){
+                    newMerdiem = (newHours < 12) ? 'AM' : 'PM';
+                }
+            }
+        }
+        
+        this.setState({
+            hours: newHours,
+            minutes: newMinutes,
+            seconds: newSeconds,
+            merdiem: newMerdiem,
+        });
+    }
+
     componentDidMount() {
-        const tic = setInterval(() => {
-          this.setState({
-            currentDate: this.getMoment(this.props.config.timezone, this.props.config.locale),
-            hours: this.state.hours,
-            minutes: this.state.minutes,
-            seconds: this.state.seconds,
-            mode: this.state.mode,
-            light: this.state.light,
-          });
+        const clockThread = setInterval(() => {
+            this.updateClock();
         }, 1000);
     
-        this.setState({ tic });
+        this.setState({ clockThread });
     }
 
     componentWillUnmount() {
-        clearInterval(this.state.tic);
+        clearInterval(this.state.clockThread);
     }
 
-    getMoment(timezone, locale) {
+    getCurrentTime(timezone, locale) {
         moment.locale(locale);
         const now = moment().tz(timezone);
         const tz = moment().tz(timezone).format('z');
     
-        // Time
+        // Time 
         let hours = now.get('hour');
-        const meridiem = (hours < 12) ? 'AM' : 'PM';
-        hours = (this.props.config.meridiem && meridiem === 'PM') ? (hours - 12) : hours;
         const minutes = now.get('minute');
         const seconds = now.get('second');
     
         // return time object
         return {
-          hours: (hours < 10 ? '0' : '') + hours,
-          minutes: (minutes < 10 ? '0' : '') + minutes,
-          seconds: (seconds < 10 ? '0' : '') + seconds,
-          meridiem: meridiem,
+          hours: hours,
+          minutes: minutes,
+          seconds: seconds,
           timezone: tz
         };
     }
@@ -74,9 +105,9 @@ class Clock extends Component {
      * State Mode value default is 0, 1 is hour editable, 2 is minute editable
      */
     pressModeBtn() {
-        let newMode = (this.state.mode + 1)%3;
+        let newMode = (this.state.editableMode + 1)%3;
         this.setState({
-            mode: newMode
+            editableMode: newMode
         });
     }
 
@@ -96,15 +127,23 @@ class Clock extends Component {
      * Mode is 2: increase minute
      */
     pressIncreaseBtn() {
-        switch(this.state.mode){
+        let newHours = this.state.hours;
+        let newMinutes = this.state.minutes;
+        switch(this.state.editableMode){
             case 1:
-                let newHours = this.state.hours + 1;
+                newHours++;
+                if(newHours === 24){
+                    newHours = 0;
+                }
                 this.setState({
                     hours: newHours
                 });
                 break;
             case 2:
-                let newMinutes = this.state.minutes + 1;
+                newMinutes++;
+                if(newMinutes === 60) {
+                    newMinutes = 0;
+                }
                 this.setState({
                     minutes: newMinutes
                 });
@@ -114,51 +153,62 @@ class Clock extends Component {
         }
 
         this.setState({
-            currentDate: this.getMoment(this.props.config.timezone, this.props.config.locale),
-
+            hours: newHours,
+            minutes: newMinutes,
         });
     }
 
     reset() {
+        const {
+            hours,
+            minutes,
+            seconds,
+            } = this.getCurrentTime(this.props.config.timezone, this.props.config.locale);
         this.setState({
-            currentDate: this.getMoment(this.props.config.timezone, this.props.config.locale),
+            hours: hours,
+            minutes: minutes,
+            seconds: seconds,
         });
     }
 
-    resetMeridiem() {
+    changeDisplayMode() {
+        const newMeridiem = (this.state.hours < 12) ? 'AM' : 'PM';
+        const newDisplayMode = !this.state.displayMode;
+
         this.setState({
-            meridiem: !this.state.meridiem
+            displayMode: newDisplayMode,
+            meridiem: newMeridiem,
         });
+    }
+
+    displayTime() {
+        let displayHours = this.state.displayMode? this.state.hours%12: this.state.hours ;
+        return ({
+            hoursMinutes: (displayHours < 10 ? '0' : '') + displayHours + ":" + (this.state.minutes < 10 ? '0' : '') + this.state.minutes,
+            seconds: (this.state.seconds < 10 ? '0' : '') + this.state.seconds});
     }
 
     render() {
         const { config } = this.props;
-        const {
-        hours,
-        minutes,
-        seconds,
-        timezone,
-        meridiem
-        } = this.state.currentDate;
-
+        const {hoursMinutes, seconds }= this.displayTime();
         return (
-            <div id={config.id} className="clock">
-                {config.showCity ? <h1 className="city">{config.city}</h1> : null}
-                {config.showTimezone ? <h2 className="timezone">{config.timezone} {timezone}</h2> : null}
+            <div id={this.state.id} className="clock">
+                <h1 className="city">{config.city}</h1>
+                <h2 className="timezone">{config.timezone}{this.state.timezone}</h2>
                 <div className="button">
-                    <button className="button mode-btn" onClick={this.pressModeBtn.bind(this)}>Mode {this.state.mode}</button>
+                    <button className="button mode-btn" onClick={this.pressModeBtn.bind(this)}>Mode {this.state.editableMode}</button>
                     <button className="button increase-btn" onClick={this.pressIncreaseBtn.bind(this)} >Increase</button>
                     <button className="button light-btn" onClick={this.pressLightBtn.bind(this)} >Light</button>
                 </div>
                 
                 <div className={`face-clock ${this.state.light ? "active" : ""}`}>
-                    <span className="clock-text">{hours}:{minutes}<sub className="seconds">{seconds}</sub></span>
-                    {config.meridiem ?
-                        <sub className="meridiem">{meridiem}</sub> : null}
+                    <span className="clock-text">{hoursMinutes}<sub className="seconds">{seconds}</sub></span>
+                    {this.state.displayMode ?
+                        <sub className="meridiem">{this.state.meridiem}</sub> : null}
                 </div>
                 <div className="button">
                     <button className="button reset-btn" onClick={this.reset.bind(this)} >Reset</button>
-                    <button className="button reset-btn" onClick={this.resetMeridiem.bind(this)} >Show meridiem </button>
+                    <button className="button reset-btn" onClick={this.changeDisplayMode.bind(this)} >Show meridiem </button>
                 </div>
                 
             </div>
@@ -170,13 +220,15 @@ Clock.propTypes = {
     /* Required */
     config: PropTypes.shape({
         id: PropTypes.string,
-        mode: Number,
-        light: PropTypes.bool,
-        city: PropTypes.string.isRequired,
+        hours: Number,
+        minutes: Number,
+        seconds: Number,
         timezone: PropTypes.string.isRequired,
+        editableMode: Number,
+        displayMode: PropTypes.bool,
+        light: PropTypes.bool,
+        city: PropTypes.string,
         locale: PropTypes.string,
-        showCity: PropTypes.bool,
-        showTimezone: PropTypes.bool,
         meridiem: PropTypes.bool,
     })
 };

@@ -4,11 +4,11 @@ import '../styles/App.css';
 import momentTZ from 'moment-timezone';
 
 const _clocks = [
-  { id: 'clockEroupe_Paris', city: 'Paris', timezone: 'Europe/Paris', mode: 0,  light: false},
-  { id: 'clockAmerica_New_York', city: 'New York', timezone: 'America/New_York', mode: 0,  light: false },
-  { id: 'clockAsia_BangKok', city: 'Ho Chi Minh', timezone: 'Asia/Bangkok', mode: 0,  light: false },
-  { id: 'clockAsia_Qatar', city: 'Qatar', timezone: 'Asia/Qatar', mode: 0,  light: false },
-  { id: 'clockHongkong', city: 'Hongkong', timezone: 'Hongkong', mode: 0,  light: false },
+  { id: 'clockEroupe_Paris', city: 'Paris', timezone: 'Europe/Paris'},
+  { id: 'clockAmerica_New_York', city: 'New York', timezone: 'America/New_York'},
+  { id: 'clockAsia_BangKok', city: 'Ho Chi Minh', timezone: 'Asia/Bangkok'},
+  { id: 'clockAsia_Qatar', city: 'Qatar', timezone: 'Asia/Qatar'},
+  { id: 'clockHongkong', city: 'Hongkong', timezone: 'Hongkong'},
 ];
 
 class App extends Component {
@@ -35,9 +35,7 @@ class App extends Component {
     e.preventDefault();
     let newClock =  { id: 'clock'+ this.state.newClockTimeZone?.split("/")[0] + '_' + this.state.newClockTimeZone?.split("/")[1], 
     city: this.state.newClockTimeZone?.split("/")[1], 
-    timezone: this.state?.newClockTimeZone, 
-    mode: 0,  
-    light: false};
+    timezone: this.state?.newClockTimeZone};
 
     let newClocks = this.state.clocks;
     newClocks.push(newClock);

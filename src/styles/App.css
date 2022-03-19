@@ -124,3 +124,7 @@ form label{
 .select-container {
   padding: 7% 0 7% 0;
 }
+
+.meridiem {
+  font-size: 2em;
+}
