@@ -21,7 +21,7 @@ class Clock extends Component {
     constructor(props) {
         super(props);
         /* Set Default Props Values */
-        if (this.props.config.id === undefined) { this.props.config.id = `pixelfactory-${this.props.config.city}` }
+        if (this.props.config.id === undefined) { this.props.config.id = `clock-${this.props.config.city}` }
         if (this.props.config.locale === undefined) { this.props.config.locale = 'en' }
         /*Use 12 hour clock to show AM/PM, default is false */
         if (this.props.config.meridiem === undefined) { this.props.config.meridiem = false }
@@ -135,18 +135,12 @@ class Clock extends Component {
                 if(newHours === 24){
                     newHours = 0;
                 }
-                this.setState({
-                    hours: newHours
-                });
                 break;
             case 2:
                 newMinutes++;
                 if(newMinutes === 60) {
                     newMinutes = 0;
                 }
-                this.setState({
-                    minutes: newMinutes
-                });
                 break;
             default:
                 break;
@@ -183,6 +177,9 @@ class Clock extends Component {
 
     displayTime() {
         let displayHours = this.state.displayMode? this.state.hours%12: this.state.hours ;
+        if(displayHours === 0 && this.state.displayMode){
+            displayHours = 12;
+        }
         return ({
             hoursMinutes: (displayHours < 10 ? '0' : '') + displayHours + ":" + (this.state.minutes < 10 ? '0' : '') + this.state.minutes,
             seconds: (this.state.seconds < 10 ? '0' : '') + this.state.seconds});
